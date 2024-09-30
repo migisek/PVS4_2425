@@ -20,7 +20,6 @@ public class GridPaint extends JFrame {
         JTextField dimField = new JTextField("TMP");
         dimField.setHorizontalAlignment(SwingConstants.CENTER);
         JLabel dimLabel = new JLabel("Dimension:");
-        gridPanel.setLayout(new GridLayout(dimension, dimension));
         flowPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 
@@ -43,9 +42,14 @@ public class GridPaint extends JFrame {
         paint.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i < dimension; i++) {
+                dimension = Integer.parseInt(dimField.getText());
+                gridPanel.setLayout(new GridLayout(dimension, dimension));
+                for (int i = 0; i < dimension*dimension; i++) {
                     gridPanel.add(new Piece(Color.yellow));
                 }
+
+
+                paint.setEnabled(false);
                 revalidate();
                 repaint();
             }
