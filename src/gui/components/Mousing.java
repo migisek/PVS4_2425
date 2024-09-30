@@ -27,7 +27,7 @@ public class Mousing extends JFrame {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                panel.setBackground(Color.yellow);
+                panel.setBackground(new Color(0xff4479));
             }
 
             @Override
