@@ -44,8 +44,14 @@ public class GridPaint extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dimension = Integer.parseInt(dimField.getText());
                 gridPanel.setLayout(new GridLayout(dimension, dimension));
-                for (int i = 0; i < dimension*dimension; i++) {
-                    gridPanel.add(new Piece(Color.yellow));
+                for (int i = 0; i < dimension; i++) {
+                    for (int j = 0; j < dimension; j++) {
+                        if ((i+j) % 2 == 1)
+                            gridPanel.add(new Piece(Color.yellow));
+                        else
+                            gridPanel.add(new Piece(Color.cyan));
+
+                    }
                 }
 
 
