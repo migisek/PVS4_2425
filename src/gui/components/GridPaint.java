@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 public class GridPaint extends JFrame {
 
+    static int dimension = 9;
+
     GridPaint(){
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(700,700);
@@ -15,8 +17,10 @@ public class GridPaint extends JFrame {
 
         JPanel gridPanel = new JPanel();
         JPanel flowPanel = new JPanel();
-
-        gridPanel.setLayout(new GridLayout(10, 10));
+        JTextField dimField = new JTextField("TMP");
+        dimField.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel dimLabel = new JLabel("Dimension:");
+        gridPanel.setLayout(new GridLayout(dimension, dimension));
         flowPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 
@@ -27,11 +31,26 @@ public class GridPaint extends JFrame {
         JButton paint = new JButton("Paint");
         paint.setFont(new Font("Consolas", Font.BOLD, 28));
         paint.setFocusable(false);
+
+
+        dimField.setFont(new Font("Consolas", Font.BOLD, 28));
+        dimLabel.setFont(new Font("Consolas", Font.BOLD, 28));
+        flowPanel.add(dimLabel);
+        flowPanel.add(dimField);
         flowPanel.add(paint);
 
-        for (int i = 1; i <= 100; i++) {
-            gridPanel.add(new Piece(Color.magenta));
-        }
+
+        paint.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < dimension; i++) {
+                    gridPanel.add(new Piece(Color.yellow));
+                }
+                revalidate();
+                repaint();
+            }
+        });
+
 
         this.add(gridPanel, BorderLayout.CENTER);
         this.add(flowPanel, BorderLayout.NORTH);
