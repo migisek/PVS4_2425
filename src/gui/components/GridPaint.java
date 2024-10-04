@@ -55,6 +55,7 @@ public class GridPaint extends JFrame {
                 }
 
 
+
                 paint.setEnabled(false);
                 revalidate();
                 repaint();
