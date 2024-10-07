@@ -42,6 +42,7 @@ public class Mousing extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
+                //lze obejit pres hranici okna
                 panel.setBackground(Color.magenta);
             }
         });
