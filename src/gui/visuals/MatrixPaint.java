@@ -19,6 +19,9 @@ public class MatrixPaint extends JFrame {
         button = new JButton("Paint");
         this.add(button, BorderLayout.NORTH);
         this.add(matrixCanvas, BorderLayout.CENTER);
+        this.setSize(800, 800);
+        this.setLocationRelativeTo(null);
+
 
         Border border = BorderFactory.createLineBorder(Color.black, 1);
         labels = new JLabel[MATRIX_DIMENSION][MATRIX_DIMENSION];
@@ -41,12 +44,20 @@ public class MatrixPaint extends JFrame {
                 button.paintImmediately(0,0,getWidth(),getHeight());
                 for (int i = 0; i < MATRIX_DIMENSION; i++) {
                     for (int j = 0; j < MATRIX_DIMENSION; j++) {
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex) {
+                            System.out.println("Thread died :(");
+                            throw new RuntimeException(ex);
+                        }
                         labels[i][j].setBackground(Color.blue);
+                        repaint();
+                        matrixCanvas.paintImmediately(0,0,getWidth(),getHeight());
                     }
                 }
             }
         });
-       this.pack();
+//       this.pack();
     }
 
     public static void main(String[] args) {
