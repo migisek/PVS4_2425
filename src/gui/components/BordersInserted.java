@@ -10,6 +10,7 @@ public class BordersInserted extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
 
+
         this.setLayout(new BorderLayout());
 
         JPanel panel1 = new JPanel();
