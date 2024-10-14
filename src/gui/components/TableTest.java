@@ -1,5 +1,7 @@
 package gui.components;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -33,8 +35,8 @@ public class TableTest extends JFrame {
 
 //        table.setEnabled(false);//do tabulky nebude mozne psat
         table.setFont(new Font("Consolas", Font.PLAIN, 16));
-        table.setBackground(Color.yellow);
-        table.setSelectionBackground(Color.cyan);
+//        table.setBackground(Color.yellow);
+//        table.setSelectionBackground(Color.cyan);
 
 
 
@@ -58,6 +60,14 @@ public class TableTest extends JFrame {
     }
 
     public static void main(String[] args) {
+        FlatDarkLaf.setup();
+
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
+
         new TableTest("Table Demo").setVisible(true);
     }
 }

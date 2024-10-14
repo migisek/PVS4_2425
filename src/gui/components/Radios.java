@@ -1,5 +1,8 @@
 package gui.components;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,7 +60,11 @@ public class Radios extends JFrame {
         add(northPanel, BorderLayout.NORTH);
 
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        FlatDarkLaf.setup();
+
+        UIManager.setLookAndFeel(new FlatDarkLaf());
+
         new Radios().setVisible(true);
     }
 }
