@@ -86,7 +86,40 @@ public class Booking extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                StringBuilder sb = new StringBuilder();
+                if (nameField.getText().isEmpty()){
+                    sb.append("\nFull name is missing");
+                }
+                if (phoneField.getText().isEmpty()){
+                    sb.append("\nNo phone number inserted");
+                } else{
+                    if (phoneField.getText().length() != 9){
+                        sb.append("\nIncorrect amount of numerics for phone number");
+                    } else {
+                        for (int i = 0; i < phoneField.getText().length(); i++) {
+                            if (!Character.isDigit(phoneField.getText().charAt(i))){
+                                sb.append("\nIncorrect phone number format!");
+                                break;
+                            }
+                        }
+                    }
+                }
 
+                //studentska sleva + neco jineho nez mesto
+                if (discountCheckBox.isSelected() && !cityOption.isSelected()){
+                    sb.append("\nStudents can only pick Cities");
+                }
+
+                if (beachOption.isSelected() && daysSlider.getValue() > 60){
+                    sb.append("\nBeach cannot be reserved for more than 60 days");
+                }
+
+
+                if (sb.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "All OK", "Submitted", JOptionPane.INFORMATION_MESSAGE);
+                }else {
+                    JOptionPane.showMessageDialog(null,sb.toString(),"Errors", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
