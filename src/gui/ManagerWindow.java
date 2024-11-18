@@ -3,6 +3,8 @@ package gui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ManagerWindow extends JFrame {
     DefaultTableModel tableModel;
@@ -41,11 +43,24 @@ public class ManagerWindow extends JFrame {
         JButton deleteButton = new JButton("Delete");
         deleteButton.setFont(DEAFULT_BUTTON_FONT);
 
+        //funkcionality buttonu
+        addButton.addActionListener(e -> new Booking(this).setVisible(true));
+
         buttonPanel.add(addButton);
         buttonPanel.add(viewButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
+    }
+
+    void addRow(String name, String phone, String destination, int days, boolean studentDiscount){
+        tableModel.addRow(new String[]{
+                name,
+                phone,
+                destination,
+                String.valueOf(days),
+                studentDiscount ? "Yes" : "No"
+        });
     }
 
     public static void main(String[] args) {

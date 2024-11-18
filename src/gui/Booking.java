@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Booking extends JFrame {
-    public Booking() {
+    public Booking(ManagerWindow parentWindow) {
         setTitle("Booking Form");
         setSize(500, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         JLabel headerLabel = new JLabel("GetAway", JLabel.CENTER);
@@ -114,9 +114,15 @@ public class Booking extends JFrame {
                     sb.append("\nBeach cannot be reserved for more than 60 days");
                 }
 
+                String destination = "";
+                if (beachOption.isSelected()) destination = "Beach";
+                if (mountainOption.isSelected()) destination = "Mountains";
+                if (cityOption.isSelected()) destination = "City";
 
                 if (sb.isEmpty()){
-                    JOptionPane.showMessageDialog(null, "All OK", "Submitted", JOptionPane.INFORMATION_MESSAGE);
+                    parentWindow.addRow(nameField.getText(), phoneField.getText(), destination, daysSlider.getValue(), discountCheckBox.isSelected());
+                    JOptionPane.showMessageDialog(null, "All OK, form loaded", "Submitted", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
                 }else {
                     JOptionPane.showMessageDialog(null,sb.toString(),"Errors", JOptionPane.ERROR_MESSAGE);
                 }
@@ -133,9 +139,5 @@ public class Booking extends JFrame {
                 daysSlider.setValue(0);
             }
         });
-    }
-
-    public static void main(String[] args) {
-        new Booking().setVisible(true);
     }
 }
