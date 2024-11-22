@@ -1,5 +1,7 @@
 package gui;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -14,7 +16,7 @@ public class ManagerWindow extends JFrame {
     static final Font DEAFULT_BUTTON_FONT = new Font("Consolas", Font.BOLD, 14);
 
 
-    ManagerWindow(){
+    ManagerWindow() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(700, 400);
         setTitle("Manager");
@@ -46,6 +48,21 @@ public class ManagerWindow extends JFrame {
         //funkcionality buttonu
         addButton.addActionListener(e -> new Booking(this).setVisible(true));
 
+        deleteButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "You need to select a row in order to delete it.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                int confirm = JOptionPane.showConfirmDialog(this, "You sure?", "Confirm delete", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION){
+                    tableModel.removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(this, "Entry deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+            }
+        });
+
+
         buttonPanel.add(addButton);
         buttonPanel.add(viewButton);
         buttonPanel.add(deleteButton);
@@ -53,7 +70,7 @@ public class ManagerWindow extends JFrame {
 
     }
 
-    void addRow(String name, String phone, String destination, int days, boolean studentDiscount){
+    void addRow(String name, String phone, String destination, int days, boolean studentDiscount) {
         tableModel.addRow(new String[]{
                 name,
                 phone,
@@ -63,7 +80,10 @@ public class ManagerWindow extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        FlatDarkLaf.setup();
+        UIManager.setLookAndFeel(new FlatDarkLaf());
+
         new ManagerWindow().setVisible(true);
     }
 }
