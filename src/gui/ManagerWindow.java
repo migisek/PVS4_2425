@@ -7,7 +7,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ManagerWindow extends JFrame {
     DefaultTableModel tableModel;
@@ -35,10 +40,6 @@ public class ManagerWindow extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
-        Vacation tester = new Vacation("Tester", "111222333", "City", 42, true);
-        vacations.add(tester);
-        tableModel.addRow(tester.returnAsTableRow());
-
         //SOUTH - buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton addButton = new JButton("New application");
@@ -47,9 +48,29 @@ public class ManagerWindow extends JFrame {
         viewButton.setFont(DEAFULT_BUTTON_FONT);
         JButton deleteButton = new JButton("Delete");
         deleteButton.setFont(DEAFULT_BUTTON_FONT);
+        JButton saveButton = new JButton("Save");
+        saveButton.setFont(DEAFULT_BUTTON_FONT);
 
         //funkcionality buttonu
         addButton.addActionListener(e -> new Booking(this).setVisible(true));
+
+        saveButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Export data?", "Confirm save", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                try {
+                    PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("saveData.txt")));
+                    for (Vacation v : vacations) {
+                        pw.println(v.name + ";" + v.phone + ";" + v.destination + ";" + v.days + ";" + v.discount);
+                    }
+                    pw.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                JOptionPane.showMessageDialog(this, "Saved", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+
+        });
 
         deleteButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
@@ -57,7 +78,7 @@ public class ManagerWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "You need to select a row in order to delete it.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 int confirm = JOptionPane.showConfirmDialog(this, "You sure?", "Confirm delete", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION){
+                if (confirm == JOptionPane.YES_OPTION) {
                     tableModel.removeRow(selectedRow);
                     vacations.remove(selectedRow);
                     JOptionPane.showMessageDialog(this, "Entry deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -80,8 +101,29 @@ public class ManagerWindow extends JFrame {
         buttonPanel.add(addButton);
         buttonPanel.add(viewButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(saveButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
+        //zkusi nacist data, pokud existuji
+        if (new File("saveData.txt").exists()){
+            try {
+                List<String> lines = Files.readAllLines(Paths.get("saveData.txt"));
+                String[] arguments;
+                Vacation v;
+                for (String line : lines){
+                    arguments = line.split(";");
+                    v = new Vacation(arguments[0], arguments[1],arguments[2], Integer.parseInt(arguments[3]), Boolean.parseBoolean(arguments[4]));
+                    vacations.add(v);//pridej do kolekce v pozadi
+                    tableModel.addRow(v.returnAsTableRow()); // napis do tabulky
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Vacation tester = new Vacation("Tester", "111222333", "City", 42, true);
+            vacations.add(tester);
+            tableModel.addRow(tester.returnAsTableRow());
+        }
     }
 
 
