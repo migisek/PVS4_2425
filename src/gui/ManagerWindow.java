@@ -7,11 +7,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ManagerWindow extends JFrame {
     DefaultTableModel tableModel;
     JTable table;
-
+    ArrayList<Vacation> vacations;
     static final Font DEAFULT_FONT = new Font("Consolas", Font.BOLD, 18);
     static final Font DEAFULT_BUTTON_FONT = new Font("Consolas", Font.BOLD, 14);
 
@@ -21,7 +22,7 @@ public class ManagerWindow extends JFrame {
         setSize(700, 400);
         setTitle("Manager");
         setLayout(new BorderLayout());
-
+        vacations = new ArrayList<>();
         //header - north
         JLabel headerLabel = new JLabel("Manage vacation applications", JLabel.CENTER);
         headerLabel.setFont(DEAFULT_FONT);
@@ -33,8 +34,10 @@ public class ManagerWindow extends JFrame {
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
-        tableModel.addRow(new String[]{"Tester", "111222333", "City", "41", "Yes"});
 
+        Vacation tester = new Vacation("Tester", "111222333", "City", 42, true);
+        vacations.add(tester);
+        tableModel.addRow(tester.returnAsTableRow());
 
         //SOUTH - buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -56,9 +59,20 @@ public class ManagerWindow extends JFrame {
                 int confirm = JOptionPane.showConfirmDialog(this, "You sure?", "Confirm delete", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION){
                     tableModel.removeRow(selectedRow);
+                    vacations.remove(selectedRow);
                     JOptionPane.showMessageDialog(this, "Entry deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
 
+            }
+        });
+
+        viewButton.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "You need to select a row in order to view it.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Vacation v = vacations.get(selectedRow);
+                new DetailView(v.returnAsTableRow()).setVisible(true);
             }
         });
 
@@ -70,15 +84,6 @@ public class ManagerWindow extends JFrame {
 
     }
 
-    void addRow(String name, String phone, String destination, int days, boolean studentDiscount) {
-        tableModel.addRow(new String[]{
-                name,
-                phone,
-                destination,
-                String.valueOf(days),
-                studentDiscount ? "Yes" : "No"
-        });
-    }
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException {
         FlatDarkLaf.setup();
