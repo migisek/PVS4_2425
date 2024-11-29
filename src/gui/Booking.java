@@ -120,7 +120,9 @@ public class Booking extends JFrame {
                 if (cityOption.isSelected()) destination = "City";
 
                 if (sb.isEmpty()){
-                    parentWindow.addRow(nameField.getText(), phoneField.getText(), destination, daysSlider.getValue(), discountCheckBox.isSelected());
+                    Vacation v = new Vacation(nameField.getText(), phoneField.getText(), destination, daysSlider.getValue(), discountCheckBox.isSelected());
+                    parentWindow.tableModel.addRow(v.returnAsTableRow());
+                    parentWindow.vacations.add(v);
                     JOptionPane.showMessageDialog(null, "All OK, form loaded", "Submitted", JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 }else {

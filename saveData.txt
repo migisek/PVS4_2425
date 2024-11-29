@@ -1,0 +1,4 @@
+Tester;111222333;City;42;true
+Tester;111222333;City;42;true
+Carl;123321123;City;19;true
+Pepa;321987654;Mountains;68;false
