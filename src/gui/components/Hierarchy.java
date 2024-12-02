@@ -5,8 +5,10 @@ import javax.swing.plaf.basic.BasicTableHeaderUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Hierarchy extends Base {
+public class Hierarchy extends Base implements ActionListener {
 
     public Hierarchy() {
         setLayout(new BorderLayout());
@@ -40,9 +42,17 @@ public class Hierarchy extends Base {
 
         add(textPane, BorderLayout.EAST);
         add(treePane, BorderLayout.CENTER);
+        JButton b = new JButton("neco");
+
+        b.addActionListener(this);
     }
 
     public static void main(String[] args) {
         new Hierarchy().setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
