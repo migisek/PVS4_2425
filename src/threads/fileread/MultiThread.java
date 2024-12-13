@@ -20,7 +20,7 @@ public class MultiThread {
     public static void main(String[] args) throws InterruptedException {
         long start = System.currentTimeMillis();
         String fileName = "num";
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        ExecutorService executor = Executors.newFixedThreadPool(50);
         for (int i = 0; i < 50; i++) {
             int fileIndex = i;
             executor.submit(() -> {
