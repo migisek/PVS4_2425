@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class BankAccountUnsafe {
+public class BankAccountSafe {
 
     static void transfer(BankAccountSync from, BankAccountSync to, int amount){
         if (from.getBalance() >= amount){
@@ -26,7 +26,7 @@ public class BankAccountUnsafe {
 
         for (int i = 0; i < threadCount; i++) {
             executor.submit(()->{
-                for (int j = 0; j < 1000; j++) {
+                for (int j = 0; j < 3000; j++) {
                     if (Math.random() < 0.5){
                         transfer(a,b,1);
                     } else {
@@ -40,25 +40,24 @@ public class BankAccountUnsafe {
         System.out.println("A: " + a.getBalance());
         System.out.println("B: " + b.getBalance());
         System.out.println("Total: " + (a.getBalance() + b.getBalance()));
-
     }
 
 }
-class BankAccountNoSync{
+class BankAccountSync {
     private int balance;
 
-    public BankAccountNoSync(int balance) {
+    public BankAccountSync(int balance) {
         this.balance = balance;
     }
 
-    public int getBalance() {
+    public synchronized int getBalance() {
         return balance;
     }
 
-    public void deposit(int amount){
+    public synchronized void deposit(int amount){
         balance += amount;
     }
-    public void withdraw(int amount){
+    public synchronized void withdraw(int amount){
         balance -= amount;
     }
 }
