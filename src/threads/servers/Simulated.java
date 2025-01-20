@@ -22,9 +22,50 @@ public class Simulated {
         Thread commandThread = new Thread(() -> {
             try(Scanner sc = new Scanner(System.in)) {
                 while (running){
-                    System.out.println("Zadej prikaz v podobě:" +
+                    System.out.println("Zadej prikaz v podobe:" +
                             "(/deposit <amount>, /withdraw <amount>, /quit");
-                    String input = sc.nextLine();
+                    String input = sc.nextLine().trim();
+                    String[] splitInput = input.split(" ");
+                    if (splitInput.length > 2){
+                        System.out.println("Zadan spatny pocet parametru!");
+                    } else {
+                        switch (splitInput[0]){
+                            case "/deposit":
+                                if (splitInput.length != 2){
+                                    System.out.println("U /deposit chybi castka!");
+                                } else {
+                                    try{
+                                        int amount = Integer.parseInt(splitInput[1]);
+                                        System.out.println("Na ucet se uklada castka " + amount);
+                                        account.deposit(amount);
+                                    } catch (NumberFormatException e){
+                                        System.out.println("Zadany spatny format cisla pro castku");
+                                    }
+                                }
+                                break;
+                            case "/withdraw":
+                                if (splitInput.length != 2){
+                                    System.out.println("U /withdraw chybi castka!");
+                                } else {
+                                    try{
+                                        int amount = Integer.parseInt(splitInput[1]);
+                                        System.out.println("Z uctu se vybira castka " + amount);
+                                        String message = account.withdraw(amount) ? "Castka odebrana" : "Nedostatecny zustatek na ucte";
+                                        System.out.println(message);
+                                    } catch (NumberFormatException e){
+                                        System.out.println("Zadany spatny format cisla pro castku");
+                                    }
+                                }
+                                break;
+                            case "/quit":
+                                System.out.println("Ukoncuji program...");
+                                running = false;
+                                break;
+                            default:
+                                System.out.println("Takovy prikaz neni...");
+                                break;
+                        }
+                    }
                 }
             }
         });
