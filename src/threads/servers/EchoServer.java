@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class EchoServer {
     public static void main(String[] args) {
-        int port = 65432;
+        int port = 11111;
         System.out.println("Spoustim server na portu: " + port);
 
         try(ServerSocket serverSocket = new ServerSocket(port)){
@@ -20,6 +20,11 @@ public class EchoServer {
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
 
                 String line;
+                while ((line = in.readLine()) != null){
+                    System.out.println("Od klienta prislo: " + line);
+                    pw.println(line);
+                }
+                System.out.println("Klient se odpojil");
             }
         } catch (IOException e){
             e.printStackTrace();
