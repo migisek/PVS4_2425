@@ -53,12 +53,19 @@ public class WorldBrowse extends JFrame {
         //flow-buttons:
 
         MyButton prevButton = new MyButton("Prev");
-        flowPanel.add(prevButton);
         MyButton nextButton = new MyButton("Next");
         nextButton.addActionListener(e -> next());
         prevButton.addActionListener(e -> previous());
-        flowPanel.add(nextButton);
 
+        MyButton firstButton = new MyButton("First");
+        MyButton lastButton = new MyButton("Last");
+
+        lastButton.addActionListener(e -> last());
+        firstButton.addActionListener(e -> first());
+        flowPanel.add(firstButton);
+        flowPanel.add(prevButton);
+        flowPanel.add(nextButton);
+        flowPanel.add(lastButton);
         add(gridPanel, BorderLayout.CENTER);
         add(flowPanel, BorderLayout.SOUTH);
     }
@@ -72,6 +79,38 @@ public class WorldBrowse extends JFrame {
                 populationText.setText(String.valueOf(set.getInt("Population")));
             } else {
                 set.previous();
+                JOptionPane.showMessageDialog(this, "Konec seznamu");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void last() {
+        try {
+            if (set.last()){
+                IDText.setText(set.getString("ID"));
+                nameText.setText(set.getString("Name"));
+                countryText.setText(set.getString("CountryCode"));
+                populationText.setText(String.valueOf(set.getInt("Population")));
+            } else {
+                set.previous();
+                JOptionPane.showMessageDialog(this, "Konec seznamu");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void first() {
+        try {
+            if (set.first()){
+                IDText.setText(set.getString("ID"));
+                nameText.setText(set.getString("Name"));
+                countryText.setText(set.getString("CountryCode"));
+                populationText.setText(String.valueOf(set.getInt("Population")));
+            } else {
+                set.next();
                 JOptionPane.showMessageDialog(this, "Konec seznamu");
             }
         } catch (SQLException e) {
