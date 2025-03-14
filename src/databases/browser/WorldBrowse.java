@@ -18,13 +18,15 @@ public class WorldBrowse extends JFrame {
 
     static ResultSet set;
 
+    MyButton saveButton, cancelButton, updateButton;
+
     public WorldBrowse() throws SQLException {
         setSize(700, 350);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         JPanel gridPanel = new JPanel(new GridLayout(4, 2, 2, 2));
-        JPanel flowPanel = new JPanel(new FlowLayout());
+        JPanel buttonPanel = new JPanel(new GridLayout(3,1));
 
         //ID
         MyLabel IDLabel = new MyLabel("ID:");
@@ -50,7 +52,7 @@ public class WorldBrowse extends JFrame {
         populationText = new MyText(String.valueOf(set.getInt("Population")));
         gridPanel.add(populationText);
 
-        //flow-buttons:
+        //read-buttons:
 
         MyButton prevButton = new MyButton("Prev");
         MyButton nextButton = new MyButton("Next");
@@ -62,12 +64,64 @@ public class WorldBrowse extends JFrame {
 
         lastButton.addActionListener(e -> last());
         firstButton.addActionListener(e -> first());
-        flowPanel.add(firstButton);
-        flowPanel.add(prevButton);
-        flowPanel.add(nextButton);
-        flowPanel.add(lastButton);
+
+        JPanel readButtons = new JPanel(new FlowLayout());
+        readButtons.add(firstButton);
+        readButtons.add(prevButton);
+        readButtons.add(nextButton);
+        readButtons.add(lastButton);
+        buttonPanel.add(readButtons);
+
+        //edit-buttons:
+
+        MyButton addButton = new MyButton("Add new");
+        MyButton deleteButton = new MyButton("Delete");
+        updateButton = new MyButton("Update");
+
+        updateButton.addActionListener(e -> {
+            setFields(true);
+            saveButton.setEnabled(true);
+            cancelButton.setEnabled(true);
+        });
+
+        JPanel editButtons = new JPanel(new FlowLayout());
+        editButtons.add(addButton);
+        editButtons.add(deleteButton);
+        editButtons.add(updateButton);
+        buttonPanel.add(editButtons);
+
+
+        //save-buttons:
+
+        saveButton = new MyButton("Save");
+        cancelButton = new MyButton("Cancel");
+        cancelButton.addActionListener(e -> {
+            saveButton.setEnabled(false);
+            cancelButton.setEnabled(false);
+            setFields(false);
+            try {
+                IDText.setText(set.getString("ID"));
+                nameText.setText(set.getString("Name"));
+                countryText.setText(set.getString("CountryCode"));
+                populationText.setText(String.valueOf(set.getInt("Population")));
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Problem s SQL: " + ex.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+            }
+
+        });
+
+        JPanel saveButtons = new JPanel(new FlowLayout());
+        saveButtons.add(saveButton);
+        saveButtons.add(cancelButton);
+        buttonPanel.add(saveButtons);
+
+
+        add(buttonPanel, BorderLayout.SOUTH);
         add(gridPanel, BorderLayout.CENTER);
-        add(flowPanel, BorderLayout.SOUTH);
+
+        saveButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+        setFields(false);
     }
 
     void next() {
@@ -84,6 +138,13 @@ public class WorldBrowse extends JFrame {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    void setFields(boolean status){
+        IDText.setEnabled(status);
+        nameText.setEnabled(status);
+        countryText.setEnabled(status);
+        populationText.setEnabled(status);
     }
 
     void last() {
