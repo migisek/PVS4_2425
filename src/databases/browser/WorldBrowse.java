@@ -18,7 +18,7 @@ public class WorldBrowse extends JFrame {
 
     static ResultSet set;
 
-    MyButton saveButton, cancelButton, updateButton;
+    MyButton saveButton, cancelButton, updateButton, firstButton, nextButton, prevButton, lastButton;
 
     public WorldBrowse() throws SQLException {
         setSize(700, 350);
@@ -54,13 +54,13 @@ public class WorldBrowse extends JFrame {
 
         //read-buttons:
 
-        MyButton prevButton = new MyButton("Prev");
-        MyButton nextButton = new MyButton("Next");
+        prevButton = new MyButton("Prev");
+        nextButton = new MyButton("Next");
         nextButton.addActionListener(e -> next());
         prevButton.addActionListener(e -> previous());
 
-        MyButton firstButton = new MyButton("First");
-        MyButton lastButton = new MyButton("Last");
+        firstButton = new MyButton("First");
+        lastButton = new MyButton("Last");
 
         lastButton.addActionListener(e -> last());
         firstButton.addActionListener(e -> first());
@@ -80,6 +80,10 @@ public class WorldBrowse extends JFrame {
 
         updateButton.addActionListener(e -> {
             setFields(true);
+            firstButton.setEnabled(false);
+            lastButton.setEnabled(false);
+            nextButton.setEnabled(false);
+            prevButton.setEnabled(false);
             saveButton.setEnabled(true);
             cancelButton.setEnabled(true);
         });
@@ -95,20 +99,7 @@ public class WorldBrowse extends JFrame {
 
         saveButton = new MyButton("Save");
         cancelButton = new MyButton("Cancel");
-        cancelButton.addActionListener(e -> {
-            saveButton.setEnabled(false);
-            cancelButton.setEnabled(false);
-            setFields(false);
-            try {
-                IDText.setText(set.getString("ID"));
-                nameText.setText(set.getString("Name"));
-                countryText.setText(set.getString("CountryCode"));
-                populationText.setText(String.valueOf(set.getInt("Population")));
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Problem s SQL: " + ex.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
-            }
-
-        });
+        cancelButton.addActionListener(e -> cancelAndReload());
 
         JPanel saveButtons = new JPanel(new FlowLayout());
         saveButtons.add(saveButton);
@@ -137,6 +128,24 @@ public class WorldBrowse extends JFrame {
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void cancelAndReload(){
+        saveButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+        firstButton.setEnabled(true);
+        lastButton.setEnabled(true);
+        nextButton.setEnabled(true);
+        prevButton.setEnabled(true);
+        setFields(false);
+        try {
+            IDText.setText(set.getString("ID"));
+            nameText.setText(set.getString("Name"));
+            countryText.setText(set.getString("CountryCode"));
+            populationText.setText(String.valueOf(set.getInt("Population")));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + ex.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
         }
     }
 
