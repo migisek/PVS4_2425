@@ -15,7 +15,7 @@ public class WorldBrowse extends JFrame {
     private static final String DB_URL = "jdbc:mysql://10.1.12.18:3306/world";
 
     MyText IDText, countryText, populationText, nameText;
-
+    Operation currentOperation;
     static ResultSet set;
 
     MyButton saveButton, cancelButton, updateButton, firstButton, nextButton, prevButton, lastButton;
@@ -25,6 +25,7 @@ public class WorldBrowse extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        currentOperation = Operation.NONE;
         JPanel gridPanel = new JPanel(new GridLayout(4, 2, 2, 2));
         JPanel buttonPanel = new JPanel(new GridLayout(3,1));
 
@@ -75,11 +76,31 @@ public class WorldBrowse extends JFrame {
         //edit-buttons:
 
         MyButton addButton = new MyButton("Add new");
+
+        addButton.addActionListener( e -> {
+            setFields(true);
+            currentOperation = Operation.ADD;
+            nameText.setText("");
+            IDText.setText("");
+            populationText.setText("");
+            countryText.setText("");
+            firstButton.setEnabled(false);
+            lastButton.setEnabled(false);
+            nextButton.setEnabled(false);
+            prevButton.setEnabled(false);
+            saveButton.setEnabled(true);
+            cancelButton.setEnabled(true);
+        });
         MyButton deleteButton = new MyButton("Delete");
+        deleteButton.addActionListener(e -> {
+            deleteRecord();
+        });
+
         updateButton = new MyButton("Update");
 
         updateButton.addActionListener(e -> {
             setFields(true);
+            currentOperation = Operation.UPDATE;
             firstButton.setEnabled(false);
             lastButton.setEnabled(false);
             nextButton.setEnabled(false);
@@ -98,6 +119,23 @@ public class WorldBrowse extends JFrame {
         //save-buttons:
 
         saveButton = new MyButton("Save");
+        saveButton.addActionListener(e -> {
+            if(currentOperation == Operation.ADD){
+               insertRecord();
+            } else if (currentOperation == Operation.UPDATE){
+                updateRecords();
+            }
+            currentOperation = Operation.NONE;
+            firstButton.setEnabled(true);
+            lastButton.setEnabled(true);
+            prevButton.setEnabled(true);
+            nextButton.setEnabled(true);
+            saveButton.setEnabled(false);
+            cancelButton.setEnabled(false);
+
+            setFields(false);
+        });
+
         cancelButton = new MyButton("Cancel");
         cancelButton.addActionListener(e -> cancelAndReload());
 
@@ -126,6 +164,48 @@ public class WorldBrowse extends JFrame {
                 set.previous();
                 JOptionPane.showMessageDialog(this, "Konec seznamu");
             }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void updateRecords(){
+        try {
+         set.updateString("Name", nameText.getText());
+         set.updateString("CountryCode", countryText.getText());
+         set.updateInt("Population", Integer.parseInt(populationText.getText()));
+         set.updateRow();
+         JOptionPane.showMessageDialog(this, "Zaznam uspesne aktualizovan");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void insertRecord(){
+        try {
+            set.moveToInsertRow();
+            set.updateString("Name", nameText.getText());
+            set.updateString("CountryCode", countryText.getText());
+            set.updateInt("Population", Integer.parseInt(populationText.getText()));
+            set.insertRow();
+            set.moveToCurrentRow();
+            JOptionPane.showMessageDialog(this, "Zaznam uspesne vlozen");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    void deleteRecord(){
+        try{
+            set.deleteRow();
+
+            if (set.next()){
+                next();
+            } else {
+                previous();
+            }
+
+            JOptionPane.showMessageDialog(this, "Zaznam uspesne smazan");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Problem s SQL: " + e.getMessage(), ":(", JOptionPane.ERROR_MESSAGE);
         }
@@ -254,4 +334,7 @@ class MyButton extends JButton {
         setBackground(Color.BLUE);
         setForeground(Color.WHITE);
     }
+}
+enum Operation{
+    ADD, UPDATE, NONE
 }
