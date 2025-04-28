@@ -1,0 +1,2 @@
+Jarda ,300
+Jenis,100

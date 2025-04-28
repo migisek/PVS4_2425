@@ -1,0 +1,6 @@
+Jenda Věk žáka Trpí demencí
+Jarda 23 true
+Ahoj,23,true
+Jan,21,false
+Jaroslav,24,false
+Radakubs,24,true

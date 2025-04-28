@@ -1,0 +1,10 @@
+Petr,37
+Hana,10
+František,30
+Anna ,20
+Jaromír ,12
+Eliška,3
+Gabriel,43
+Jan,79
+Zuzana,55
+Jarmila,20
