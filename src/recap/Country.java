@@ -6,6 +6,8 @@ public class Country {
     int population;
     double lifeExpectancy;
 
+    static String capital;
+
     public Country(String countryName, String continent, int population, double lifeExpectancy) {
         this.countryName = countryName;
         this.continent = continent;
